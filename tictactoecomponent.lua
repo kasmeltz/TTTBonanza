@@ -25,7 +25,7 @@ module(...)
 --		tpt - the number of seconds per turn allowed
 --		before the turn is skipped
 --
-function _M:new(g, n, hpn, tpt)
+function _M:new(g, n, c, hpn, tpt)
 	
 	local o = { 
 		game = g,
@@ -42,7 +42,7 @@ function _M:new(g, n, hpn, tpt)
 	o.images[1] = imageManager.Load('o', 'images/o.png')
 	
 	o.playerNames[o.humanPlayerNumber] = n
-	o.playerNames[1 - o.humanPlayerNumber] = 'Computer'
+	o.playerNames[1 - o.humanPlayerNumber] = c
 	
 	o.positionScale = { 
 		x = 0, 

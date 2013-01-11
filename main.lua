@@ -15,8 +15,11 @@ local gameScene = require 'gameScene'
 local totalMoney = 0
 local roundMoney = 0
 local roundNumber = 0
-local speedComponentCount = 15
 local selectedOpponent = nil
+
+local secondsPerTurn = 12
+local speedComponentCount =
+{ 1, 2, 4, 8, 15 }
 
 local defaultFont = love.graphics.newFont(14)
 
@@ -25,6 +28,76 @@ local function centerPrint(text, y)
 	local x = (love.graphics.getWidth() / 2) - (w / 2)
 	
 	love.graphics.print(text, x, y)
+end
+
+local function createNewTicTacToeComponent(humanName, computerName, secondsPerTurn)
+	local winSound = soundManager.Load('win', 'sounds/win.wav', 'static')
+	local drawSound = soundManager.Load('draw', 'sounds/draw.wav', 'static')
+	local loseSound = soundManager.Load('lose', 'sounds/lose.mp3', 'static')
+		
+	local hn = math.random(0,1)
+	local t = tttcomponent:new(tttgame:new(tttboard:new()),
+		humanName, computerName, hn, secondsPerTurn)
+		
+	t.gameOver = function(game)
+		if game.winner == hn then
+			winSound:rewind()
+			winSound:play()			
+			roundMoney = roundMoney + 100
+		elseif game.isDraw then
+			drawSound:rewind()
+			drawSound:play()
+			roundMoney = roundMoney + 50
+		else
+			loseSound:rewind()
+			loseSound:play()	
+		end		
+	end
+	
+	return t            
+end
+
+local function createSpeedRound(humanName, computerName, boardCount, secondsPerTurn)	
+	local gs = gameScene:new()
+
+	local sx, sy = 50, 50
+	for i = 1, boardCount do
+		local sc = createNewTicTacToeComponent(humanName, computerName, secondsPerTurn)
+		sc:setDrawArea(sx, sy, 100, 100)
+		gs:addComponent(sc)
+		sx = sx + 150
+		if sx > 650 then
+			sx = 50
+			sy = sy + 150
+		end
+	end
+
+	gs:addComponent{
+		update = function()
+			local allDone = true			
+			for _, v in pairs(gs.components) do
+				if v.game then
+					if not v.game.isGameOver then
+						allDone = false
+						break
+					end
+				end					
+			end		
+			if allDone then
+				sceneManager.switch('speedRecap', 2)
+			end		
+		end
+	}
+	
+	function gs:begin()
+		roundMoney = 0
+		for _, v in pairs(gs.components) do
+			if v.game then v.game:reset() end
+		end
+	end
+	
+	sceneManager.removeScene('speed')
+	sceneManager.addScene('speed', gs)
 end
 
 local function createTitleScreen()
@@ -219,7 +292,9 @@ local function createCountDownScene()
 	function gs:begin()
 		currentCounter = 5
 		roundNumber = roundNumber + 1
+		secondsPerTurn = secondsPerTurn - 2
 		local op = selectedOpponent
+		createSpeedRound('You', op.name, speedComponentCount[roundNumber], secondsPerTurn)	
 		local tauntNumber = math.random(1, #op.countDownTaunts)
 		taunt = op.countDownTaunts[tauntNumber]
 		taunt.sound:rewind()
@@ -228,76 +303,6 @@ local function createCountDownScene()
 	
 	sceneManager.removeScene('speedCountdown')
 	sceneManager.addScene('speedCountdown', gs)
-end
-
-local function createNewTicTacToeComponent()
-	local winSound = soundManager.Load('win', 'sounds/win.wav', 'static')
-	local drawSound = soundManager.Load('draw', 'sounds/draw.wav', 'static')
-	local loseSound = soundManager.Load('lose', 'sounds/lose.mp3', 'static')
-		
-	local hn = math.random(0,1)
-	local t = tttcomponent:new(tttgame:new(tttboard:new()),
-		'You', hn, 5)
-		
-	t.gameOver = function(game)
-		if game.winner == hn then
-			winSound:rewind()
-			winSound:play()			
-			roundMoney = roundMoney + 100
-		elseif game.isDraw then
-			drawSound:rewind()
-			drawSound:play()
-			roundMoney = roundMoney + 50
-		else
-			loseSound:rewind()
-			loseSound:play()	
-		end		
-	end
-	
-	return t            
-end
-
-local function createSpeedRound()	
-	local gs = gameScene:new()
-
-	local sx, sy = 50, 50
-	for i = 1, speedComponentCount do
-		local sc = createNewTicTacToeComponent()
-		sc:setDrawArea(sx, sy, 100, 100)
-		gs:addComponent(sc)
-		sx = sx + 150
-		if sx > 650 then
-			sx = 50
-			sy = sy + 150
-		end
-	end
-
-	gs:addComponent{
-		update = function()
-			local allDone = true			
-			for _, v in pairs(gs.components) do
-				if v.game then
-					if not v.game.isGameOver then
-						allDone = false
-						break
-					end
-				end					
-			end		
-			if allDone then
-				sceneManager.switch('speedRecap', 2)
-			end		
-		end
-	}
-	
-	function gs:begin()
-		roundMoney = 0
-		for _, v in pairs(gs.components) do
-			if v.game then v.game:reset() end
-		end
-	end
-	
-	sceneManager.removeScene('speed')
-	sceneManager.addScene('speed', gs)
 end
 
 local function createSpeedRecapScene()
@@ -328,7 +333,9 @@ local function createSpeedRecapScene()
 			centerPrint('$' .. totalMoney, 440)
 		end,
 		update = function()			
-			sceneManager.switch('speedCountdown', 10)
+			if roundNumber < 5 then
+				sceneManager.switch('speedCountdown', 10)
+			end
 		end	
 	}	
 	
@@ -352,7 +359,6 @@ function love.load()
 	createOpponentScene()
 	createOppnonentSelectedScene()
 	createCountDownScene()
-	createSpeedRound()
 	createSpeedRecapScene()
 	sceneManager.switch('title')
 end
