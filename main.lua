@@ -17,7 +17,7 @@ local roundMoney = 0
 local roundNumber = 0
 local selectedOpponent = nil
 
-local secondsPerTurn = 12
+local secondsPerTurn = 20
 local speedComponentCount =
 { 1, 2, 4, 8, 15 }
 local speedComponentSize = 
@@ -317,7 +317,7 @@ local function createCountDownScene()
 	function gs:begin()
 		currentCounter = 10
 		roundNumber = roundNumber + 1
-		secondsPerTurn = secondsPerTurn - 2
+		secondsPerTurn = secondsPerTurn - 3
 		local op = selectedOpponent
 		createSpeedRound('You', op.name, speedComponentCount[roundNumber], secondsPerTurn)	
 		local tauntNumber = math.random(1, #op.countDownTaunts)
@@ -327,7 +327,7 @@ local function createCountDownScene()
 		fart:rewind()
 		fanfare:rewind()
 		fanfare:play()
-		fartTime = math.random() * 3 + 1
+		fartTime = math.random() * 4
 	end
 	
 	sceneManager.removeScene('speedCountdown')
