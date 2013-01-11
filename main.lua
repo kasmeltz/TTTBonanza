@@ -29,8 +29,8 @@ end
 
 local function createTitleScreen()
 	local gs = gameScene:new()
-	local titleFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 64)
-	local smallFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 32)
+	local titleFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 64)
+	local smallFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 32)
 	
 	local fanfare = soundManager.Load('titlefanfare', 'sounds/opening.mp3', 'static')
 	local fart = soundManager.Load('fart', 'sounds/fart.wav', 'static')
@@ -82,8 +82,8 @@ end
 local function createOpponentScene()	
 	local gs = gameScene:new()
 	
-	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 60)
-	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 60)
+	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 24)
 	
 	gs:addComponent {
 		draw = function() 				
@@ -146,8 +146,8 @@ end
 local function createOppnonentSelectedScene()
 	local gs = gameScene:new()
 	
-	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 60)
-	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)	
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 60)
+	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 24)	
 	
 	gs:addComponent {
 		draw = function()		
@@ -187,9 +187,9 @@ local function createCountDownScene()
 	local gs = gameScene:new()
 	
 	local currentCounter = 5
-	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)
-	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 48)
-	local countFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 128)
+	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 24)
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 48)
+	local countFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 128)
 	
 	local taunt
 	
@@ -303,8 +303,8 @@ end
 local function createSpeedRecapScene()
 	local gs = gameScene:new()
 	
-	local countFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 32)
-	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 48)
+	local countFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 32)
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 48)
 	local taunt
 	
 	gs:addComponent{
