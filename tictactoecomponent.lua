@@ -205,10 +205,14 @@ function _M:drawGameBoard()
 	local outlineColor
 	
 	-- draw count down timer
+	local height = self.positionScale.h - 
+		(self.positionScale.h * (self.currentTurnTime / self.timePerTurn))
+	local width = self.positionScale.w / 10
+	
 	love.graphics.setLineWidth(1)
 	love.graphics.setColor(100,100,255,255)
 	love.graphics.rectangle('fill',
-		self.positionScale.sx - 20, self.positionScale.sy, 10, 100)
+		self.positionScale.x - width * 2, self.positionScale.y, width, height)
 	
 	if self.game.isGameOver then
 		if self.game.isDraw then

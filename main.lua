@@ -50,12 +50,13 @@ local function createTitleScreen()
 			end
 		end,
 		update = function(dt)
-			if fanfare:isStopped() and not playFart then
+			if fanfare:tell('seconds') >= 3 and not playFart then
+				fanfare:stop()
 				fart:rewind()
 				fart:play()
 				playFart = true
 			end			
-			if playFart and fart:isStopped() then				
+			if fart:tell('seconds') >= 1 then				
 				showEnter = true
 			end
 			if showEnter then
