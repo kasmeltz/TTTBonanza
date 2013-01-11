@@ -85,13 +85,17 @@ availableOpponents =
 			{
 				text = 'I will crush you!',
 				sound = soundManager.Load('opponentsarcdtaunt1', 'sounds/opponents/ar/cdtaunt1.wav')
-			}			
-		}--[[,
+			},
+			{
+				text = 'You will learn the meaning of pain this round.',
+				sound = soundManager.Load('opponentsarcdtaunt2', 'sounds/opponents/ar/cdtaunt2.wav')
+			}					
+		},
 		dollarTaunts = {
 			['0'] = {
-				text = 'You earned $0 this round. That\'s so funny!',
+				text = 'Mwahahaha!',
 				sound = soundManager.Load('opponentsardollar0', 'sounds/opponents/ar/dollar0.wav')
 			}						
-		}	]]	
+		}
 	}	
 }
