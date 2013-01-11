@@ -24,7 +24,19 @@ availableOpponents =
 			{
 				text = 'Ohhh you will be very, very sorry after this round!',
 				sound = soundManager.Load('opponentssvcdtaunt2', 'sounds/opponents/sv/cdtaunt2.wav')
-			}
+			},
+			{
+				text = 'There is absolutely no way that you will beat me this round!',
+				sound = soundManager.Load('opponentssvcdtaunt3', 'sounds/opponents/sv/cdtaunt3.wav')
+			},
+			{
+				text = 'Prepare to be destroyed!',
+				sound = soundManager.Load('opponentssvcdtaunt4', 'sounds/opponents/sv/cdtaunt4.wav')
+			},
+			{
+				text = 'Now it\'s time to get serious!',
+				sound = soundManager.Load('opponentssvcdtaunt5', 'sounds/opponents/sv/cdtaunt5.wav')
+			}			
 		},
 		dollarTaunts = {
 			['0'] = {
