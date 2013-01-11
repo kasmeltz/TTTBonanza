@@ -315,7 +315,7 @@ local function createSpeedRecapScene()
 			
 			love.graphics.setFont(countFont)
 			love.graphics.setColor(255,255,255,255)
-			centerPrint('You earned earned', 200)
+			centerPrint('You earned', 200)
 			love.graphics.setColor(0,255,0,255)
 			centerPrint('$' .. roundMoney, 240)
 			love.graphics.setColor(255,255,255,255)
