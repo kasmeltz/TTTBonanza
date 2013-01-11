@@ -195,7 +195,7 @@ function _M:drawGameBoard()
 				-- set the color and draw the piece
 				love.graphics.setColor(dc)
 				love.graphics.draw(self.images[p], sx, sy, 0, 
-					self.positionScale.sx, self.positionScale.sy)
+					self.positionScale.sx, self.positionScale.sy)							
 			end
 			sx = sx + self.positionScale.w / 3
 		end
@@ -203,6 +203,12 @@ function _M:drawGameBoard()
 	end
 	
 	local outlineColor
+	
+	-- draw count down timer
+	love.graphics.setLineWidth(1)
+	love.graphics.setColor(100,100,255,255)
+	love.graphics.rectangle('fill',
+		self.positionScale.sx - 20, self.positionScale.sy, 10, 100)
 	
 	if self.game.isGameOver then
 		if self.game.isDraw then

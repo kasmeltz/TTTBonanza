@@ -22,7 +22,7 @@ availableOpponents =
 				sound = soundManager.Load('opponentssvcdtaunt1', 'sounds/opponents/sv/cdtaunt1.wav')
 			},
 			{
-				text = 'Ohhh you will be so very sorry after this round!',
+				text = 'Ohhh you will be very, very sorry after this round!',
 				sound = soundManager.Load('opponentssvcdtaunt2', 'sounds/opponents/sv/cdtaunt2.wav')
 			}
 		}

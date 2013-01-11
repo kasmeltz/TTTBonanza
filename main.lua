@@ -31,7 +31,9 @@ local function createTitleScreen()
 	local smallFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 32)
 	
 	local fanfare = soundManager.Load('titlefanfare', 'sounds/opening.mp3', 'static')
+	local fart = soundManager.Load('fart', 'sounds/fart.wav', 'static')
 	
+	local playFart = false
 	local showEnter = false
 	
 	gs:addComponent{
@@ -48,7 +50,12 @@ local function createTitleScreen()
 			end
 		end,
 		update = function(dt)
-			if fanfare:isStopped() then
+			if fanfare:isStopped() and not playFart then
+				fart:rewind()
+				fart:play()
+				playFart = true
+			end			
+			if playFart and fart:isStopped() then				
 				showEnter = true
 			end
 			if showEnter then
@@ -177,7 +184,7 @@ local function createCountDownScene()
 	local gs = gameScene:new()
 	
 	local currentCounter = 5
-	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 32)
+	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)
 	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 48)
 	local countFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 128)
 	
@@ -298,7 +305,10 @@ local function createSpeedRecapScene()
 			love.graphics.setColor(255,255,255,255)
 			centerPrint('Thous hast earned', 200)
 			centerPrint('$' .. money, 240)
-		end
+		end,
+		update = function()
+			sceneManager.switch('speedCountdown', 3)
+		end		
 	}	
 	
 	sceneManager.removeScene('speedRecap')
