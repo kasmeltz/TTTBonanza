@@ -14,6 +14,7 @@ local gameScene = require 'gameScene'
 
 local money = 0
 local speedComponentCount = 15
+local selectedOpponent = -1
 
 local defaultFont = love.graphics.newFont(14)
 
@@ -31,6 +32,8 @@ local function createTitleScreen()
 	
 	local fanfare = soundManager.Load('titlefanfare', 'sounds/opening.mp3', 'static')
 	
+	local showEnter = false
+	
 	gs:addComponent{
 		draw = function()	
 			love.graphics.setFont(titleFont)
@@ -38,18 +41,26 @@ local function createTitleScreen()
 			centerPrint('Tic Tac Toe', 170)
 			centerPrint('Bonanza', 240)
 			
-			love.graphics.setFont(smallFont)
-			love.graphics.setColor(230,100,80,255)
-			centerPrint('Press Enter To Begin', 350)
+			if showEnter then
+				love.graphics.setFont(smallFont)
+				love.graphics.setColor(230,100,80,255)
+				centerPrint('Press Enter To Begin', 350)
+			end
 		end,
 		update = function(dt)
-			if love.keyboard.isDown('return') then
-				sceneManager.switch('pickOpponent')--speedCountdown')
+			if fanfare:isStopped() then
+				showEnter = true
+			end
+			if showEnter then
+				if love.keyboard.isDown('return') then				
+					sceneManager.switch('pickOpponent')
+				end
 			end
 		end
 	}
 	
 	function gs:begin()
+		showEnter = false
 		fanfare:rewind()
 		fanfare:play()
 	end
@@ -61,25 +72,106 @@ end
 local function createOpponentScene()	
 	local gs = gameScene:new()
 	
-	gs:addComponent {
-		draw = function()
-			love.graphics.setColor(255,255,255,255)
-			for _, op in ipairs(opponents.availableOpponents) do
-				love.graphics.draw(op.image, 200, 200)
-			end			
-		end, 
-		update = function()
-		end
-	}
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 60)
+	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)
 	
-	function gs:begin()
-		opponents.availableOpponents[1].pickSound:rewind()
-		opponents.availableOpponents[1].pickSound:play()
+	gs:addComponent {
+		draw = function() 				
+			love.graphics.setFont(bigFont)
+			love.graphics.setColor(0,255,255,255)
+			centerPrint('Pick Your Opponent', 50)
+		end
+	}				
+	
+	local sx = 100
+	local sy = 200
+	local counter = 1
+	for k, op in ipairs(opponents.availableOpponents) do
+		local dx, dy = sx, sy
+		local lbdown = false
+		local highlight = false
+		
+		gs:addComponent {
+			draw = function() 				
+				love.graphics.setFont(regularFont)
+				love.graphics.setColor(255,255,255,255)
+				love.graphics.draw(op.image, dx, dy)
+				love.graphics.print(op.name, dx, dy + op.image:getHeight())	
+				if highlight then			
+					love.graphics.setColor(255,0,255,255)				
+					love.graphics.setLineWidth(4)
+					love.graphics.rectangle('line', dx, dy, 
+						op.image:getWidth(), op.image:getHeight() )
+				end
+			end, 
+			update = function()
+				highlight = false
+				
+				local mx, my = love.mouse:getPosition()
+				if mx >= dx and my >= dy and
+					mx <= dx + op.image:getWidth() and
+					my <= dy + op.image:getHeight() then					
+						highlight = true
+				end
+				
+				if love.mouse.isDown('l') then 
+					lbdown = true 
+				else
+					if lbdown and highlight then						
+						selectedOpponent = k
+						sceneManager.switch('opponentSelected')
+					end
+					
+					lbdown = false
+				end
+			end
+		}				
+		sx = sx + 300
 	end
 		
 	sceneManager.removeScene('pickOpponent')
 	sceneManager.addScene('pickOpponent', gs)
 end	
+
+local function createOppnonentSelectedScene()
+	local gs = gameScene:new()
+	
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 60)
+	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)	
+	
+	gs:addComponent {
+		draw = function()
+			local op = opponents.availableOpponents[selectedOpponent]
+			local cx = love.graphics.getWidth() / 2 - op.image:getWidth() / 2
+			local cy = love.graphics.getHeight() / 2 - op.image:getHeight() / 2
+			
+			love.graphics.setFont(bigFont)	
+			love.graphics.setColor(0,255,255,255)
+			centerPrint('You Have Selected', 50)	
+			
+			love.graphics.setFont(regularFont)
+			love.graphics.setColor(255,255,255,255)
+			love.graphics.draw(op.image, cx, cy)
+			centerPrint(op.name, cy + op.image:getHeight())	
+		end, 
+		update = function()
+			local op = opponents.availableOpponents[selectedOpponent]
+			if op.pickSound:isStopped() then
+				sceneManager.switch('speedCountdown', 0.5)
+			end
+		end
+	}
+	
+	function gs:begin()
+		local op = opponents.availableOpponents[selectedOpponent]
+		op.pickSound:rewind()
+		op.pickSound:play()				
+	end
+
+	sceneManager.removeScene('opponentSelected')
+	sceneManager.addScene('opponentSelected', gs)
+
+end
 
 local function createCountDownScene()
 	local gs = gameScene:new()
@@ -90,10 +182,6 @@ local function createCountDownScene()
 	
 	gs:addComponent{
 		draw = function(self)
-			love.graphics.setFont(regularFont)
-			love.graphics.setColor(255,255,255,255)
-			centerPrint('Prepare theeself for the mf\'in speed round!', 350)
-		
 			love.graphics.setFont(countFont)
 			love.graphics.setColor(0,255,0,255)
 			centerPrint(tostring(math.ceil(currentCounter)), 200)
@@ -205,6 +293,7 @@ function love.load()
 	math.randomseed( os.time() )
 	createTitleScreen()
 	createOpponentScene()
+	createOppnonentSelectedScene()
 	createCountDownScene()
 	createSpeedRound()
 	createSpeedRecapScene()

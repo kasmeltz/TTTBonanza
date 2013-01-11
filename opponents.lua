@@ -15,7 +15,9 @@ availableOpponents =
 	{ 
 		name = 'Steve VonHooey',
 		image = imageManager.Load('sv', 'images/opponents/sv.jpg'),
-		pickSound = soundManager.Load('opponentssvpick', 'sounds/opponents/sv/pick.wav')
+		pickSound = soundManager.Load('opponentssvpick', 'sounds/opponents/sv/pick.wav'),
+		countDownTauns = {
+		}
 	}
 }
 
