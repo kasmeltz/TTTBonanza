@@ -14,7 +14,7 @@ local gameScene = require 'gameScene'
 
 local money = 0
 local speedComponentCount = 15
-local selectedOpponent = -1
+local selectedOpponent = nil
 
 local defaultFont = love.graphics.newFont(14)
 
@@ -118,7 +118,7 @@ local function createOpponentScene()
 					lbdown = true 
 				else
 					if lbdown and highlight then						
-						selectedOpponent = k
+						selectedOpponent = op
 						sceneManager.switch('opponentSelected')
 					end
 					
@@ -140,8 +140,8 @@ local function createOppnonentSelectedScene()
 	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 24)	
 	
 	gs:addComponent {
-		draw = function()
-			local op = opponents.availableOpponents[selectedOpponent]
+		draw = function()		
+			local op = selectedOpponent		
 			local cx = love.graphics.getWidth() / 2 - op.image:getWidth() / 2
 			local cy = love.graphics.getHeight() / 2 - op.image:getHeight() / 2
 			
@@ -155,7 +155,7 @@ local function createOppnonentSelectedScene()
 			centerPrint(op.name, cy + op.image:getHeight())	
 		end, 
 		update = function()
-			local op = opponents.availableOpponents[selectedOpponent]
+			local op = selectedOpponent	
 			if op.pickSound:isStopped() then
 				sceneManager.switch('speedCountdown', 0.5)
 			end
@@ -163,7 +163,7 @@ local function createOppnonentSelectedScene()
 	}
 	
 	function gs:begin()
-		local op = opponents.availableOpponents[selectedOpponent]
+		local op = selectedOpponent
 		op.pickSound:rewind()
 		op.pickSound:play()				
 	end
@@ -178,10 +178,21 @@ local function createCountDownScene()
 	
 	local currentCounter = 5
 	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 32)
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 48)
 	local countFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 128)
 	
+	local taunt
+	
 	gs:addComponent{
-		draw = function(self)
+		draw = function(self)	
+			love.graphics.setFont(bigFont)
+			love.graphics.setColor(255,0,255,255)
+			centerPrint('Prepare for speed round!', 40)
+
+			love.graphics.setFont(regularFont)
+			love.graphics.setColor(255,255,255,255)
+			centerPrint(taunt.text, 350)
+		
 			love.graphics.setFont(countFont)
 			love.graphics.setColor(0,255,0,255)
 			centerPrint(tostring(math.ceil(currentCounter)), 200)
@@ -197,6 +208,11 @@ local function createCountDownScene()
 	
 	function gs:begin()
 		currentCounter = 5
+		local op = selectedOpponent
+		local tauntNumber = math.random(1, #op.countDownTaunts)
+		taunt = op.countDownTaunts[tauntNumber]
+		taunt.sound:rewind()
+		taunt.sound:play()
 	end
 	
 	sceneManager.removeScene('speedCountdown')

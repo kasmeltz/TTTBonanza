@@ -16,15 +16,15 @@ availableOpponents =
 		name = 'Steve VonHooey',
 		image = imageManager.Load('sv', 'images/opponents/sv.jpg'),
 		pickSound = soundManager.Load('opponentssvpick', 'sounds/opponents/sv/pick.wav'),
-		countDownTauns = {
+		countDownTaunts = {
+			{
+				text = 'You in big, big trouble mister!',
+				sound = soundManager.Load('opponentssvcdtaunt1', 'sounds/opponents/sv/cdtaunt1.wav')
+			},
+			{
+				text = 'Ohhh you will be so very sorry after this round!',
+				sound = soundManager.Load('opponentssvcdtaunt2', 'sounds/opponents/sv/cdtaunt2.wav')
+			}
 		}
 	}
-}
-
-countdownSayings = {}
-countdownSayings['Steve VonHooey'] =
-{
-	'You in big, big trouble mista!',
-	'Ohhh you will be so sorry after this!'
-
 }
