@@ -12,7 +12,9 @@ local sceneManager = require 'gameSceneManager'
 
 local gameScene = require 'gameScene'
 
-local money = 0
+local totalMoney = 0
+local roundMoney = 0
+local roundNumber = 0
 local speedComponentCount = 15
 local selectedOpponent = nil
 
@@ -50,7 +52,7 @@ local function createTitleScreen()
 			end
 		end,
 		update = function(dt)
-			if fanfare:tell('seconds') >= 3 and not playFart then
+			if fanfare:tell('seconds') >= 3.2 and not playFart then
 				fanfare:stop()
 				fart:rewind()
 				fart:play()
@@ -195,7 +197,7 @@ local function createCountDownScene()
 		draw = function(self)	
 			love.graphics.setFont(bigFont)
 			love.graphics.setColor(255,0,255,255)
-			centerPrint('Prepare for speed round!', 40)
+			centerPrint('Prepare for speed round #' .. roundNumber, 40)
 
 			love.graphics.setFont(regularFont)
 			love.graphics.setColor(255,255,255,255)
@@ -216,6 +218,7 @@ local function createCountDownScene()
 	
 	function gs:begin()
 		currentCounter = 5
+		roundNumber = roundNumber + 1
 		local op = selectedOpponent
 		local tauntNumber = math.random(1, #op.countDownTaunts)
 		taunt = op.countDownTaunts[tauntNumber]
@@ -235,15 +238,16 @@ local function createNewTicTacToeComponent()
 	local hn = math.random(0,1)
 	local t = tttcomponent:new(tttgame:new(tttboard:new()),
 		'You', hn, 5)
+		
 	t.gameOver = function(game)
 		if game.winner == hn then
 			winSound:rewind()
 			winSound:play()			
-			money = money + 100
+			roundMoney = roundMoney + 100
 		elseif game.isDraw then
 			drawSound:rewind()
 			drawSound:play()
-			money = money + 50
+			roundMoney = roundMoney + 50
 		else
 			loseSound:rewind()
 			loseSound:play()	
@@ -286,6 +290,7 @@ local function createSpeedRound()
 	}
 	
 	function gs:begin()
+		roundMoney = 0
 		for _, v in pairs(gs.components) do
 			if v.game then v.game:reset() end
 		end
@@ -299,18 +304,43 @@ local function createSpeedRecapScene()
 	local gs = gameScene:new()
 	
 	local countFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 32)
+	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.ttf', 48)
+	local taunt
 	
 	gs:addComponent{
 		draw = function()
+			love.graphics.setFont(bigFont)
+			love.graphics.setColor(255,0,255,255)
+			centerPrint('Speed round #' .. roundNumber, 40)
+			
 			love.graphics.setFont(countFont)
 			love.graphics.setColor(255,255,255,255)
-			centerPrint('Thous hast earned', 200)
-			centerPrint('$' .. money, 240)
+			centerPrint('You earned earned', 200)
+			love.graphics.setColor(0,255,0,255)
+			centerPrint('$' .. roundMoney, 240)
+			love.graphics.setColor(255,255,255,255)
+			centerPrint('ths round', 280)
+			
+			love.graphics.setFont(countFont)
+			love.graphics.setColor(255,255,255,255)
+			centerPrint('Total money earned', 400)
+			love.graphics.setColor(0,255,0,255)
+			centerPrint('$' .. totalMoney, 440)
 		end,
-		update = function()
-			sceneManager.switch('speedCountdown', 3)
-		end		
+		update = function()			
+			sceneManager.switch('speedCountdown', 10)
+		end	
 	}	
+	
+	function gs:begin()
+		totalMoney = totalMoney + roundMoney
+		local op = selectedOpponent
+		taunt = op.dollarTaunts[tostring(roundMoney)]
+		if taunt then
+			taunt.sound:rewind()
+			taunt.sound:play()				
+		end
+	end	
 	
 	sceneManager.removeScene('speedRecap')
 	sceneManager.addScene('speedRecap', gs)

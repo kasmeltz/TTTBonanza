@@ -213,7 +213,9 @@ function _M:drawGameBoard()
 		love.graphics.setLineWidth(1)
 		love.graphics.setColor(100,100,255,255)
 		love.graphics.rectangle('fill',
-			self.positionScale.x - width * 2, self.positionScale.y, width, height)
+			self.positionScale.x - width * 2, 
+			self.positionScale.y + self.positionScale.h - height, width, 
+			height)
 		
 		if self.game.isGameOver then
 			if self.game.isDraw then
