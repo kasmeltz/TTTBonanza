@@ -269,17 +269,12 @@ end
 local function createCountDownScene()
 	local gs = gameScene:new()
 	
-	local currentCounter = 10
+	local currentCounter = 5
 	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 24)
 	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 48)
 	local countFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 128)
 	
 	local taunt
-	local playTaunt = false
-	
-	local fanfare = soundManager.Load('titlefanfare', 'sounds/opening.mp3', 'static')
-	local fart = soundManager.Load('fart', 'sounds/fart.wav', 'static')	
-	local fartTime
 	
 	gs:addComponent{
 		draw = function(self)	
@@ -297,16 +292,6 @@ local function createCountDownScene()
 		end,
 		update = function(self, dt)
 			currentCounter = currentCounter - dt
-			if currentCounter <= 5 and not playTaunt then
-				playTaunt = true
-				taunt.sound:play()	
-			end
-			
-			if fanfare:tell('seconds') >= fartTime then	
-				fart:play()
-				fanfare:stop()
-			end
-			
 			if currentCounter <= 0 then
 				currentCounter = 0
 				sceneManager.switch('speed')
@@ -315,19 +300,15 @@ local function createCountDownScene()
 	}
 	
 	function gs:begin()
-		currentCounter = 10
+		currentCounter = 5
 		roundNumber = roundNumber + 1
 		secondsPerTurn = secondsPerTurn - 3
 		local op = selectedOpponent
 		createSpeedRound('You', op.name, speedComponentCount[roundNumber], secondsPerTurn)	
 		local tauntNumber = math.random(1, #op.countDownTaunts)
 		taunt = op.countDownTaunts[tauntNumber]
-		playTaunt = false
 		taunt.sound:rewind()		
-		fart:rewind()
-		fanfare:rewind()
-		fanfare:play()
-		fartTime = math.random() * 4
+		taunt.sound:play()	
 	end
 	
 	sceneManager.removeScene('speedCountdown')

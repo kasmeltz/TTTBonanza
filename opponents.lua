@@ -76,5 +76,22 @@ availableOpponents =
 				sound = soundManager.Load('opponentssvdollar400', 'sounds/opponents/sv/dollar400.wav')
 			}							
 		}		
-	}
+	},
+	{ 
+		name = 'Ernie Schwartzkop',
+		image = imageManager.Load('ar', 'images/opponents/ar.jpg'),
+		pickSound = soundManager.Load('opponentarvpick', 'sounds/opponents/ar/pick.wav'),
+		countDownTaunts = {
+			{
+				text = 'I will crush you!',
+				sound = soundManager.Load('opponentsarcdtaunt1', 'sounds/opponents/ar/cdtaunt1.wav')
+			}			
+		}--[[,
+		dollarTaunts = {
+			['0'] = {
+				text = 'You earned $0 this round. That\'s so funny!',
+				sound = soundManager.Load('opponentsardollar0', 'sounds/opponents/ar/dollar0.wav')
+			}						
+		}	]]	
+	}	
 }
