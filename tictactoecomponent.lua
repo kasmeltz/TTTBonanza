@@ -208,7 +208,7 @@ function _M:drawGameBoard()
 	if not self.game.isGameOver then
 		local height = self.positionScale.h - 
 			(self.positionScale.h * (self.currentTurnTime / self.timePerTurn))
-		local width = self.positionScale.w / 10
+		local width = 10
 		
 		love.graphics.setLineWidth(1)
 		love.graphics.setColor(100,100,255,255)
@@ -248,7 +248,8 @@ function _M:drawGameBoard()
 			else
 				love.graphics.setColor(255,0,0,255)
 			end
-			love.graphics.print(self.playerNames[self.game.winner] .. ' Wins!', sx, sy)
+			love.graphics.print(self.playerNames[self.game.winner], sx, sy)
+			love.graphics.print('Wins!', sx, sy + 20)
         end
 	else
 		love.graphics.setColor(255, 255, 255, 255)

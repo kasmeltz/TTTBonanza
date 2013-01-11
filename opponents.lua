@@ -50,7 +50,15 @@ availableOpponents =
 			['100'] = {
 				text = 'Wow a whole $100. You are so good at this game... not!',
 				sound = soundManager.Load('opponentssvdollar100', 'sounds/opponents/sv/dollar100.wav')
-			}
+			},
+			['150'] = {
+				text = '$150? That\'s not even enough to buy a nice meal at the Keg.',
+				sound = soundManager.Load('opponentssvdollar150', 'sounds/opponents/sv/dollar150.wav')
+			},
+			['200'] = {
+				text = '$200? I\'m really shaking in my boots now.',
+				sound = soundManager.Load('opponentssvdollar200', 'sounds/opponents/sv/dollar200.wav')
+			}	
 		}		
 	}
 }

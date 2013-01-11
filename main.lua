@@ -20,6 +20,14 @@ local selectedOpponent = nil
 local secondsPerTurn = 12
 local speedComponentCount =
 { 1, 2, 4, 8, 15 }
+local speedComponentSize = 
+{
+	{ 500, 500 },
+	{ 300, 300 },
+	{ 200, 200 },
+	{ 150, 150 },
+	{ 100, 100 }
+}
 
 local defaultFont = love.graphics.newFont(14)
 
@@ -60,15 +68,17 @@ end
 local function createSpeedRound(humanName, computerName, boardCount, secondsPerTurn)	
 	local gs = gameScene:new()
 
+	local size = speedComponentSize[roundNumber]
+	
 	local sx, sy = 50, 50
 	for i = 1, boardCount do
 		local sc = createNewTicTacToeComponent(humanName, computerName, secondsPerTurn)
-		sc:setDrawArea(sx, sy, 100, 100)
+		sc:setDrawArea(sx, sy, size[1], size[2])
 		gs:addComponent(sc)
-		sx = sx + 150
+		sx = sx + size[1] + 50
 		if sx > 650 then
 			sx = 50
-			sy = sy + 150
+			sy = sy + size[2] + 50
 		end
 	end
 
