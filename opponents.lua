@@ -58,7 +58,15 @@ availableOpponents =
 			['200'] = {
 				text = '$200? I\'m really shaking in my boots now.',
 				sound = soundManager.Load('opponentssvdollar200', 'sounds/opponents/sv/dollar200.wav')
-			}	
+			},
+			['250'] = {
+				text = 'I can program a 3D starfield in QuickBasic. And all you can do is $250?',
+				sound = soundManager.Load('opponentssvdollar250', 'sounds/opponents/sv/dollar250.wav')
+			},
+			['300'] = {
+				text = '$300. Woop dee doo! You must be very, very proud of yourself.',
+				sound = soundManager.Load('opponentssvdollar300', 'sounds/opponents/sv/dollar300.wav')
+			}					
 		}		
 	}
 }

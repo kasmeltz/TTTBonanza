@@ -137,7 +137,6 @@ local function createTitleScreen()
 		update = function(dt)
 			if fanfare:tell('seconds') >= 3.2 and not playFart then
 				fanfare:stop()
-				fart:rewind()
 				fart:play()
 				playFart = true
 			end			
@@ -154,6 +153,7 @@ local function createTitleScreen()
 	
 	function gs:begin()
 		showEnter = false
+		fart:rewind()	
 		fanfare:rewind()
 		fanfare:play()
 	end
@@ -269,12 +269,17 @@ end
 local function createCountDownScene()
 	local gs = gameScene:new()
 	
-	local currentCounter = 5
+	local currentCounter = 10
 	local regularFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 24)
 	local bigFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 48)
 	local countFont = fontManager.Load('Cooper Black', 'COOPBL.TTF', 128)
 	
 	local taunt
+	local playTaunt = false
+	
+	local fanfare = soundManager.Load('titlefanfare', 'sounds/opening.mp3', 'static')
+	local fart = soundManager.Load('fart', 'sounds/fart.wav', 'static')	
+	local fartTime
 	
 	gs:addComponent{
 		draw = function(self)	
@@ -292,6 +297,16 @@ local function createCountDownScene()
 		end,
 		update = function(self, dt)
 			currentCounter = currentCounter - dt
+			if currentCounter <= 5 and not playTaunt then
+				playTaunt = true
+				taunt.sound:play()	
+			end
+			
+			if fanfare:tell('seconds') >= fartTime then	
+				fart:play()
+				fanfare:stop()
+			end
+			
 			if currentCounter <= 0 then
 				currentCounter = 0
 				sceneManager.switch('speed')
@@ -300,15 +315,19 @@ local function createCountDownScene()
 	}
 	
 	function gs:begin()
-		currentCounter = 5
+		currentCounter = 10
 		roundNumber = roundNumber + 1
 		secondsPerTurn = secondsPerTurn - 2
 		local op = selectedOpponent
 		createSpeedRound('You', op.name, speedComponentCount[roundNumber], secondsPerTurn)	
 		local tauntNumber = math.random(1, #op.countDownTaunts)
 		taunt = op.countDownTaunts[tauntNumber]
-		taunt.sound:rewind()
-		taunt.sound:play()
+		playTaunt = false
+		taunt.sound:rewind()		
+		fart:rewind()
+		fanfare:rewind()
+		fanfare:play()
+		fartTime = math.random() * 3 + 1
 	end
 	
 	sceneManager.removeScene('speedCountdown')
@@ -334,7 +353,7 @@ local function createSpeedRecapScene()
 			love.graphics.setColor(0,255,0,255)
 			centerPrint('$' .. roundMoney, 240)
 			love.graphics.setColor(255,255,255,255)
-			centerPrint('ths round', 280)
+			centerPrint('this round', 280)
 			
 			love.graphics.setFont(countFont)
 			love.graphics.setColor(255,255,255,255)
