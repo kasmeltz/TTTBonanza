@@ -66,7 +66,15 @@ availableOpponents =
 			['300'] = {
 				text = '$300. Woop dee doo! You must be very, very proud of yourself.',
 				sound = soundManager.Load('opponentssvdollar300', 'sounds/opponents/sv/dollar300.wav')
-			}					
+			},
+			['350'] = {
+				text = 'Wow $350. My two year old son just got the same score!',
+				sound = soundManager.Load('opponentssvdollar350', 'sounds/opponents/sv/dollar350.wav')
+			},
+			['400'] = {
+				text = 'Congratulations! You have achieved $400. Now you no longer horrible, just really really bad!',
+				sound = soundManager.Load('opponentssvdollar400', 'sounds/opponents/sv/dollar400.wav')
+			}							
 		}		
 	}
 }
