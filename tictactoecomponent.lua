@@ -205,31 +205,33 @@ function _M:drawGameBoard()
 	local outlineColor
 	
 	-- draw count down timer
-	local height = self.positionScale.h - 
-		(self.positionScale.h * (self.currentTurnTime / self.timePerTurn))
-	local width = self.positionScale.w / 10
-	
-	love.graphics.setLineWidth(1)
-	love.graphics.setColor(100,100,255,255)
-	love.graphics.rectangle('fill',
-		self.positionScale.x - width * 2, self.positionScale.y, width, height)
-	
-	if self.game.isGameOver then
-		if self.game.isDraw then
-			outlineColor = { 128, 128, 128, 128 }
-		else
-			if self.game.winner == self.humanPlayerNumber then
-				outlineColor = { 0, 255, 0, 255} 
-			else
-				outlineColor = { 255, 0, 0, 255 }
-			end
-		end			
+	if not self.game.isGameOver then
+		local height = self.positionScale.h - 
+			(self.positionScale.h * (self.currentTurnTime / self.timePerTurn))
+		local width = self.positionScale.w / 10
 		
-		love.graphics.setColor(outlineColor)
-		love.graphics.setLineWidth( 4 )
-		love.graphics.rectangle('line', 
-			self.positionScale.x, self.positionScale.y, 
-			self.positionScale.w, self.positionScale.h)					
+		love.graphics.setLineWidth(1)
+		love.graphics.setColor(100,100,255,255)
+		love.graphics.rectangle('fill',
+			self.positionScale.x - width * 2, self.positionScale.y, width, height)
+		
+		if self.game.isGameOver then
+			if self.game.isDraw then
+				outlineColor = { 128, 128, 128, 128 }
+			else
+				if self.game.winner == self.humanPlayerNumber then
+					outlineColor = { 0, 255, 0, 255} 
+				else
+					outlineColor = { 255, 0, 0, 255 }
+				end
+			end			
+			
+			love.graphics.setColor(outlineColor)
+			love.graphics.setLineWidth( 4 )
+			love.graphics.rectangle('line', 
+				self.positionScale.x, self.positionScale.y, 
+				self.positionScale.w, self.positionScale.h)					
+		end
 	end
 	
 	sx = self.positionScale.x
